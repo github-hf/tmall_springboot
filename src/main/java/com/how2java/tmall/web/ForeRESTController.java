@@ -11,11 +11,13 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.subject.Subject;
+import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.HtmlUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -39,7 +41,7 @@ public class ForeRESTController {
     @Autowired
     OrderService orderService;
 
-
+//    }
     //home()方法映射首页访问路径 "forehome".
     //1. 查询所有分类
     //2. 为这些分类填充产品集合
@@ -84,6 +86,35 @@ public class ForeRESTController {
         return Result.success();
     }
 
+    //修改密码
+    @PostMapping("/register2")
+    public Object updatePassword(@RequestBody User user,HttpSession session) {
+    	User user2=(User) session.getAttribute("user");
+    	String name=user2.getName();
+    	int id=user2.getId();
+    	System.out.println("id="+id);
+    	//前端传过来的旧密码
+    	String password =user.getName();
+    	String newpassword=user.getPassword();
+    	Subject subject = SecurityUtils.getSubject();
+        UsernamePasswordToken token = new UsernamePasswordToken(name, password); 
+        try {
+            subject.login(token);
+            String salt = new SecureRandomNumberGenerator().nextBytes().toString();
+            int times = 2;
+            String algorithmName = "md5";
+
+            String encodedPassword = new SimpleHash(algorithmName, newpassword, salt, times).toString();
+            user2.setSalt(salt);
+            user2.setPassword(encodedPassword);
+            userService.update(user2);
+            return Result.success();
+        } catch (AuthenticationException e) {
+            String message ="账号密码错误";
+            return Result.fail(message);
+        }
+    }
+    
     @PostMapping("/forelogin")
     public Object login(@RequestBody User userParam, HttpSession session) {
         String name = userParam.getName();
@@ -104,6 +135,7 @@ public class ForeRESTController {
         try {
             subject.login(token);
             User user = userService.getByName(name);
+            System.out.println(user.getId());
 //          subject.getSession().setAttribute("user", user);
             session.setAttribute("user", user);
             return Result.success();

@@ -18,6 +18,11 @@ public class ForePageController {
     public String home() {
         return "fore/home";
     }
+    
+    @GetMapping(value = "/updatePassword")
+    public String updatePassword() {
+        return "fore/updatePassword";
+    }
 
     @GetMapping(value = "/register")
     public String register() {
@@ -77,6 +82,11 @@ public class ForePageController {
     @GetMapping(value = "/registerSuccess")
     public String registerSuccess() {
         return "fore/registerSuccess";
+    }
+    
+    @GetMapping(value = "/updateSuccess")
+    public String updateSuccess() {
+        return "fore/updateSuccess";
     }
 
     @GetMapping(value = "/review")

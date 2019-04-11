@@ -1,3 +1,14 @@
+<style>
+.top.dropdown.btn {
+	display: inline-block;
+	padding: 1px 0px;
+	margin-bottom: 0;
+	font-size: 14px;
+	font-weight: normal;
+	line-height: 1.42857143;
+	height: 2px;
+}
+</style>
 <nav class="top" th:fragment="html" xmlns:th="http://www.w3.org/1999/xhtml">
     <a th:href="${application.contextPath}">
         <span style="color:#C40000;margin:0px" class=" glyphicon glyphicon-home redColor"></span>
@@ -5,12 +16,27 @@
     </a>
 
     <span>喵，欢迎来天猫</span>
-
+<!-- 
     <span th:if="${null!=session.user}">
 		<a href="login" th:text="${session.user.name}"></a>
+	
 		<a href="forelogout" >退出</a>
 	</span>
-
+	-->
+	 
+	<span th:if="${null!=session.user}" class="dropdown">
+    <button type="button" style="border:0px" id="dropdownMenu1" data-toggle="dropdown"><a href="login" th:text="${session.user.name}"></a>
+        <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+        <li role="presentation">
+            <a href="updatePassword">修改密码</a>
+        </li>
+        <li role="presentation">
+            <a href="forelogout" >退出</a>
+        </li>
+    </ul>
+	</span>
 
     <span th:if="${null==session.user}">
 		<a href="login">请登录</a>
@@ -24,6 +50,7 @@
 			<span style="color:#C40000;margin:0px" class=" glyphicon glyphicon-shopping-cart redColor"></span>
 			购物车<strong th:text="${session.cartTotalItemNumber}"></strong>件</a>
 	</span>
+
 </nav>
 
 

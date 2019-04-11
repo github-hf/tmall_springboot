@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
  
 import com.how2java.tmall.dao.UserDAO;
@@ -40,6 +41,10 @@ public class UserService {
     }
 
     public void add(User user) {
+        userDAO.save(user);
+    }
+   // @Query(value="update ")
+    public void update(User user) {
         userDAO.save(user);
     }
 }
