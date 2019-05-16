@@ -120,15 +120,20 @@ public class ForeRESTController {
     public Object login(@RequestBody User userParam, HttpSession session) {
         String name = userParam.getName();
         name = HtmlUtils.htmlEscape(name);
-
-//        User user = userService.get(name, userParam.getPassword());
-//        if (null == user) {
-//            String message = "账号密码错误";
-//            return Result.fail(message);
-//        } else {
-//            session.setAttribute("user", user);
-//            return Result.success();
-//        }
+        if("admin".equals(name)) {
+        	//使用shiro
+            Subject subject = SecurityUtils.getSubject();
+            UsernamePasswordToken token = new UsernamePasswordToken(name, userParam.getPassword());
+            try {
+                subject.login(token);
+                User user = userService.getByName(name);
+                session.setAttribute("user", user);
+                return Result.adminsuccess();
+            } catch (AuthenticationException e) {
+                String message ="账号密码错误";
+                return Result.fail(message);
+            }
+        }
 
         //使用shiro
         Subject subject = SecurityUtils.getSubject();
@@ -136,7 +141,6 @@ public class ForeRESTController {
         try {
             subject.login(token);
             User user = userService.getByName(name);
-            System.out.println(user.getId());
 //          subject.getSession().setAttribute("user", user);
             session.setAttribute("user", user);
             return Result.success();
@@ -366,7 +370,7 @@ public class ForeRESTController {
         Order order = orderService.get(oid);
         order.setStatus(OrderService.waitDelivery);
         order.setPayDate(new Date());
-        orderService.update(order);
+        orderService.update(order);      
         return order;
     }
 

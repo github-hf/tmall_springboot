@@ -2,6 +2,7 @@ package com.hf.tmall.util;
  
 public class Result {
     public static int SUCCESS_CODE = 0;
+    public static int SUCCESS_CODE_ADMIN = 2;
     public static int FAIL_CODE = 1;
      
     int code;
@@ -16,6 +17,9 @@ public class Result {
  
     public static Result success() {
         return new Result(SUCCESS_CODE,null,null);
+    }
+    public static Result adminsuccess() {
+        return new Result(SUCCESS_CODE_ADMIN,null,null);
     }
     public static Result success(Object data) {
         return new Result(SUCCESS_CODE,"",data);

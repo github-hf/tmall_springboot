@@ -6,10 +6,11 @@
 	        var data4Vue = {
 	        		uri:'forepayed',
 	        		order:[],
-	        		total:0
+	        		total:0,
+	        		products:[]
 	        };
 	        //ViewModel
-	        var vue = new Vue({
+	        var hfd = new Vue({
 	            el: '#workingArea',
 	            data: data4Vue,
 	            mounted:function(){ //mounted　表示这个 Vue 对象加载成功了
@@ -20,45 +21,60 @@
 	            	load:function(){
 	                    var url =  this.uri+"?oid="+oid;
 	                    axios.get(url).then(function(response) {
-	                    	vue.order = response.data;
+	                    	hfd.order = response.data;
+	                    });
+	            	}
+	            	
+	            }
+	            
+	        });       			
+	        var vue = new Vue({
+	            el: '#hf',
+	            data: data4Vue,
+	            mounted:function(){ //mounted　表示这个 Vue 对象加载成功了
+	            	this.load();
+	            },        
+	            methods: {
+	            	load:function(){
+	                    var url =  "http://localhost:8080/tmall_springboot/foresearch?keyword=1";
+	                    axios.post(url).then(function(response) {
+	            	        vue.products = response.data;
+	                        vue.$nextTick(function(){
+	        	            	linkDefaultActions();
+	                        })
 	                    });
 	            	}
 	            }
-	        });       			
-			
+	        });
 		})		
 	
 	</script>
 
 	<div class="payedDiv">
 		<div class="payedTextDiv">
-			<img src="img/site/paySuccess.png">
-			<span>您已成功付款</span> 
-			
+			<img src="img/site/paySuccess.png"> <span>您已成功付款</span>
+
 		</div>
 		<div class="payedAddressInfo">
 			<ul>
 				<li>收货地址：{{order.address}} {{order.receiver}} {{order.mobile }}</li>
 				<li>实付款：<span class="payedInfoPrice">
-					{{total|formatMoney}} 
-				</li>
-				<li>预计08月08日送达	</li>
+						{{total|formatMoney}} </li>
+				<li>预计2-3日后送达</li>
 			</ul>
-					
+
 			<div class="paedCheckLinkDiv">
-				您可以
-				<a class="payedCheckLink" href="bought">查看已买到的宝贝</a>
-				<a class="payedCheckLink" href="bought">查看交易详情 </a>
+				您可以 <a class="payedCheckLink" href="bought">查看已买到的宝贝</a> <a
+					class="payedCheckLink" href="bought">查看交易详情 </a>
 			</div>
-				
+
 		</div>
-		
-		<div class="payedSeperateLine">
-		</div>
-		
+
+		<div class="payedSeperateLine"></div>
+
 		<div class="warningDiv">
-			<img src="img/site/warning.png">
-			<b>安全提醒：</b>下单后，<span class="redColor boldWord">用QQ给您发送链接办理退款的都是骗子！</span>丰瑞不存在系统升级，订单异常等问题，谨防假冒客服电话诈骗！
+			<img src="img/site/warning.png"> <b>安全提醒：</b>下单后，<span
+				class="redColor boldWord">用QQ给您发送链接办理退款的都是骗子！</span>丰瑞不存在系统升级，订单异常等问题，谨防假冒客服电话诈骗！
 		</div>
 	</div>
 </div>

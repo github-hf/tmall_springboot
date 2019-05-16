@@ -1,0 +1,31 @@
+<div th:fragment="html">
+<script>
+	$(function(){
+		var keyword = getUrlParms("keyword");
+        var data4Vue = {
+        		uri:'foresearch',
+        		products:[]
+        };
+        //ViewModel
+        var vue = new Vue({
+            el: '#hf',
+            data: data4Vue,
+            mounted:function(){ //mounted　表示这个 Vue 对象加载成功了
+            	this.load();
+            },        
+            methods: {
+            	load:function(){
+                    var url =  this.uri+"?keyword=1";
+                    axios.post(url).then(function(response) {
+            	        vue.products = response.data;
+                        vue.$nextTick(function(){
+        	            	linkDefaultActions();
+                        })
+                    });
+            	}
+            }
+        });       			
+	})
+</script>	
+	<div th:replace="include/fore/cart/recommend::html" ></div>
+</div>

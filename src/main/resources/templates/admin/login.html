@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+            
+        <script src="js/vue/2.5.16/vue.min.js"></script>
+    	<script src="js/axios/0.17.1/axios.min.js"></script>
+    	<script src="js/moment/2.22.2/moment.js"></script></head>
+    	<script src="js/jquery/2.0.0/jquery.min.js"></script>
+        <!-- CSS -->
+        <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=PT+Sans:400,700'>
+        <link rel="stylesheet" href="css/reset.css">
+        <link rel="stylesheet" href="css/style.css">
+    
+<body style="background-image:url(img//backgrounds/bg.jpg);background-repeat: no-repeat;background-size: cover;" >
+<script>
+        $(function(){
+            var data4Vue = {
+                uri:'forelogin',
+                result: [],
+                user:{name:'', password:''}
+            };
+            //ViewModel
+            var vue = new Vue({
+                el: '#workingArea',
+                data: data4Vue,
+                methods: {
+                    login:function(){
+                        var url =  this.uri;
+                        if(0==this.user.name.length){
+                        	$("span.errorMessage").html("请输入用户名");
+                            $("div.loginErrorMessageDiv").css("visibility","visible");
+                            return;
+                        }
+                        if(0==this.user.password.length){
+                        	$("span.errorMessage").html("请输入密码");
+                            $("div.loginErrorMessageDiv").css("visibility","visible");
+                            return;
+                        }
+
+                        axios.post(url,this.user).then(function(response) {
+                            var result = response.data;
+                            if(result.code==0){
+                            	$("span.errorMessage").html("用户无权限");
+                                $("div.loginErrorMessageDiv").css("visibility","visible");
+                            }
+                            else if(result.code==2){
+                                location.href="admin_category_list";
+                            }
+                            else{
+                            	$("span.errorMessage").html(result.message);
+                                $("div.loginErrorMessageDiv").css("visibility","visible");
+                            }
+                        });
+                    }
+                }
+            });
+
+        })
+    </script>
+    <div id="workingArea">
+        <div class="page-container" >
+            <h1>丰瑞后台登录</h1>
+            <div class="loginErrorMessageDiv">
+                 <span class="errorMessage"></span>
+            </div>
+               <div><input type="text" v-model="user.name" class="username" placeholder="Username"></div> 
+               <div> <input type="password" v-model="user.password" class="password" placeholder="Password"></div> 
+                <div><button @click="login">Sign me in</button></div> 
+        </div>
+       </div>  
+       
+</body>
+</html>
